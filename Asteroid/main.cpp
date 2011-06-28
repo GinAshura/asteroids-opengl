@@ -6,6 +6,5 @@
 int main()
 {
     sf::Window App(sf::VideoMode(800,600,32),"SFML Window");
-    While(App.isOpened()){
-
-    }
+    return 0;
+}
