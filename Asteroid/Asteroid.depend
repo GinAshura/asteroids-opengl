@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1309271039 source:d:\projects\asteroid\main.cpp
+1309341935 source:d:\projects\asteroid\main.cpp
 	<SFML/System.hpp>
 	<SFML/Window.hpp>
 	<SFML/Graphics.hpp>

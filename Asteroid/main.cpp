@@ -6,5 +6,8 @@
 int main()
 {
     sf::Window App(sf::VideoMode(800,600,32),"SFML Window");
+    while(App.IsOpened()){
+        App.Display();
+    }
     return 0;
 }
