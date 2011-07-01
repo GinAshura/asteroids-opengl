@@ -51,13 +51,12 @@ public class asteroid {
 	 
 	    // clear the screen
 	    GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
-	 
 	    // center square according to screen size
 	    GL11.glPushMatrix();
 	    GL11.glTranslatef(Display.getDisplayMode().getWidth() / 2, Display.getDisplayMode().getHeight() / 2, 0.0f);
 	 
 	      // rotate square according to angle
-	      GL11.glRotatef(10, angle, 0, 1.0f);
+	      GL11.glRotatef(angle, 0, 0, 1.0f);
 	      GL11.glBegin(GL11.GL_QUADS);
 	        GL11.glVertex2i(-50, -50);
 	        GL11.glVertex2i(50, -50);
