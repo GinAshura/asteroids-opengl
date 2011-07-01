@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
  * @author Name <email>
  * @version 1.0
  */
-public class asteroid {
+public class Asteroid {
  
   /** Game title */
   public static final String GAME_TITLE = "My Game";
