@@ -7,6 +7,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.*;
+import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -23,7 +24,7 @@ public class OpenClustar {
 	private static final int FRAMERATE = 60;
 	private static boolean finished;
 	private static Vector3f pos = new Vector3f(0f,0f,0f);
-	private static Vector3f rot = new Vector3f(0f,0f,0f);
+	private static Quaternion rot = new Quaternion(1f,0f,0f,0f);
 
 
 	public static void main(String[] args) {
@@ -44,14 +45,12 @@ public class OpenClustar {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // Clearing up the screen and depth buffer
 		GL11.glLoadIdentity(); // Resetting the matrix (so X is left-right, Y up-down and Z front-behind)
 		
-		GL11.glPopMatrix();
 		
-		GL11.glTranslatef(-pos.x,-pos.y,-pos.z);
-		GL11.glRotatef(rot.z, 0f, 0f, 1.0f);
-		GL11.glRotatef(rot.y, 1.0f, 0f, 0f);
 		GL11.glRotatef(rot.x, 0f, 1.0f, 0f);
-		
-		GL11.glPushMatrix();
+		GL11.glRotatef(rot.y, 1.0f, 0f, 0f);
+		GL11.glRotatef(rot.z, 0f, 0f, 1.0f);
+		GL11.glTranslatef(-pos.x,-pos.y,-pos.z);
+
 		
 		GL11.glBegin(GL11.GL_QUADS); GL11.glColor3f(1f, 0f, 0f);
 			GL11.glVertex3f(-1.0f, 1.0f, 1.0f);
@@ -173,8 +172,6 @@ public class OpenClustar {
 		}
 		
 		float speed = 0.2f;
-		rot = new Vector3f(0f,0f,0f);
-		pos = new Vector3f(0f,0f,0f);
 		
 		/*if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
 			pos.z+=speed*Math.sin((rot.x*3.14)/180)*Math.cos((rot.z*3.14)/180);
@@ -197,27 +194,27 @@ public class OpenClustar {
 			pos.y-=speed*Math.sin(-(rot.y*3.14)/180);
 		}*/
 		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			pos.x=speed;
+			pos.x+=speed;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-			pos.x=-speed;
+			pos.x-=speed;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			pos.z=speed;
+			pos.z+=speed;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
-			pos.z=-speed;
+			pos.z-=speed;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			rot.z=2;
+			rot.z+=2;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
-			rot.z=-2;
+			rot.z-=2;
 		}
 		int DX = Mouse.getDX();
 		int DY = Mouse.getDY();
-		rot.x=-speed*DX;
-		rot.y=-speed*DY;
+		rot.x+=speed*DX;
+		rot.y+=-speed*DY;
 		Mouse.setCursorPosition(Display.getDisplayMode().getWidth()/2, Display.getDisplayMode().getHeight()/2);
 	}
 }
