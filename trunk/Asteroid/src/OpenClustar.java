@@ -4,6 +4,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.*;
 import org.lwjgl.util.vector.Vector3f;
@@ -27,7 +28,7 @@ public class OpenClustar {
 
 	public static void main(String[] args) {
 		try {
-			init(true);
+			init(false);
 			run();
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
@@ -43,7 +44,14 @@ public class OpenClustar {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // Clearing up the screen and depth buffer
 		GL11.glLoadIdentity(); // Resetting the matrix (so X is left-right, Y up-down and Z front-behind)
 		
+		GL11.glPopMatrix();
 		
+		GL11.glTranslatef(-pos.x,-pos.y,-pos.z);
+		GL11.glRotatef(rot.z, 0f, 0f, 1.0f);
+		GL11.glRotatef(rot.y, 1.0f, 0f, 0f);
+		GL11.glRotatef(rot.x, 0f, 1.0f, 0f);
+		
+		GL11.glPushMatrix();
 		
 		GL11.glBegin(GL11.GL_QUADS); GL11.glColor3f(1f, 0f, 0f);
 			GL11.glVertex3f(-1.0f, 1.0f, 1.0f);
@@ -70,15 +78,6 @@ public class OpenClustar {
 			GL11.glVertex3f( 1.0f,-1.0f,-1.0f);
 		GL11.glEnd();
 		
-		
-		GL11.glPopMatrix();
-		
-		GL11.glTranslatef(-pos.x,-pos.y,-pos.z);
-		GL11.glRotatef(rot.z, 0f, 0f, 1.0f);
-		GL11.glRotatef(rot.y, 1.0f, 0f, 0f);
-		GL11.glRotatef(rot.x, 0f, 1.0f, 0f);
-		
-		GL11.glPushMatrix();
 	}
 
 	/**
@@ -88,6 +87,7 @@ public class OpenClustar {
 	private static void init(boolean fullscreen) throws Exception {
 		// Create a fullscreen window with 1:1 orthographic 2D projection (default)
 		Display.setTitle(GAME_TITLE);
+		Display.setDisplayMode(new DisplayMode(800, 600));
 		Display.setFullscreen(fullscreen);
 		Display.setVSyncEnabled(true);
 		Display.create();
