@@ -10,7 +10,6 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.*;
-import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -26,9 +25,8 @@ public class OpenClustar {
 	public static final String GAME_TITLE = "Asteroid";
 	private static final int FRAMERATE = 60;
 	private static boolean finished;
-	private static Vector3f pos = new Vector3f(0f,0f,0f);
-	private static Vector3f rot = new Vector3f(1f,0f,0f);
-	private static Quaternion q = new Quaternion();
+	private static Vector3f pos = new Vector3f(0f,0f,0.0f);
+	private static Vector3f rot = new Vector3f(-1f,0f,0f);
 
 	public static void main(String[] args) {
 		
@@ -48,21 +46,8 @@ public class OpenClustar {
 		
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // Clearing up the screen and depth buffer
 		GL11.glLoadIdentity(); // Resetting the matrix (so X is left-right, Y up-down and Z front-behind)
-		
-
-		float[] rr=GetMatrix(q);
-		
-		FloatBuffer br=BufferUtils.createFloatBuffer(16*4);
-		
-		br.put(rr);
-		
-		
-		
-		/*GL11.glRotatef(rot.y, 0f, 1.0f, 0f);
-		GL11.glRotatef(rot.x, 1.0f, 0f, 0f);
-		GL11.glRotatef(rot.z, 0f, 0f, 1.0f);*/
-		GL11.glLoadMatrix(br);
-		GL11.glTranslatef(-pos.x,-pos.y,-pos.z);
+			
+		GLU.gluLookAt(5f, 5f, 5f, 0f, 0f, 0f, 0f, 0f, 1f);
 		
 		GL11.glBegin(GL11.GL_QUADS); GL11.glColor3f(1f, 0f, 0f);
 			GL11.glVertex3f(-1.0f, 1.0f, 1.0f);
@@ -88,8 +73,20 @@ public class OpenClustar {
 			GL11.glVertex3f( 1.0f, 1.0f,-1.0f);
 			GL11.glVertex3f( 1.0f,-1.0f,-1.0f);
 		GL11.glEnd();
+		GL11.glBegin(GL11.GL_QUADS); GL11.glColor3f(1f, 1f, 0f);
+			GL11.glVertex3f( 1.0f,-1.0f, 1.0f);
+			GL11.glVertex3f(-1.0f,-1.0f, 1.0f);
+			GL11.glVertex3f( 1.0f,-1.0f,-1.0f);
+			GL11.glVertex3f(-1.0f,-1.0f,-1.0f);
+		GL11.glEnd();
+		GL11.glBegin(GL11.GL_QUADS); GL11.glColor3f(1f, 1f, 0f);
+			GL11.glVertex3f( 1.0f, 1.0f, 1.0f);
+			GL11.glVertex3f(-1.0f, 1.0f, 1.0f);
+			GL11.glVertex3f( 1.0f, 1.0f,-1.0f);
+			GL11.glVertex3f(-1.0f, 1.0f,-1.0f);
+			GL11.glEnd();
 		
-
+		
 		
 	}
 
@@ -167,56 +164,7 @@ public class OpenClustar {
 			}
 		}
 	}
-
 	
-	private static Quaternion FromAxis(float x, float y, float z, float deg)
-	{
-		Quaternion qat = new Quaternion();
-		float angle = (float)((deg / 180.0f) * 3.14159265f);
-
-		// Here we calculate the sin( theta / 2) once for optimization
-		float result = (float)Math.sin( angle / 2.0f );
-
-		// Calcualte the w value by cos( theta / 2 )
-		qat.w = (float)Math.cos( angle / 2.0f );
-
-		// Calculate the x, y and z of the quaternion
-		qat.x = (float)(x * result);
-		qat.y = (float)(y * result);
-		qat.z = (float)(z * result);
-		
-		return qat;
-	}
-	
-	private static float[] GetMatrix (Quaternion q)
-	{
-		float pMatrix[]=new float[16];
-		pMatrix[ 0] = 1.0f - 2.0f * ( q.y * q.y + q.z * q.z );
-		pMatrix[ 1] = 2.0f * (q.x * q.y + q.z * q.w);
-		pMatrix[ 2] = 2.0f * (q.x * q.z - q.y * q.w);
-		pMatrix[ 3] = 0.0f;
-		
-		// Second row
-		pMatrix[ 4] = 2.0f * ( q.x * q.y - q.z * q.w );
-		pMatrix[ 5] = 1.0f - 2.0f * ( q.x * q.x + q.z * q.z );
-		pMatrix[ 6] = 2.0f * (q.z * q.y + q.x * q.w );
-		pMatrix[ 7] = 0.0f;
-
-		// Third row
-		pMatrix[ 8] = 2.0f * ( q.x * q.z + q.y * q.w );
-		pMatrix[ 9] = 2.0f * ( q.y * q.z - q.x * q.w );
-		pMatrix[10] = 1.0f - 2.0f * ( q.x * q.x + q.y * q.y );
-		pMatrix[11] = 0.0f;
-
-		// Fourth row
-		pMatrix[12] = 0;
-		pMatrix[13] = 0;
-		pMatrix[14] = 0;
-		pMatrix[15] = 1.0f;
-
-		return pMatrix;
-		
-	}
 	/**
 	 * Do any game-specific cleanup
 	 */
@@ -280,16 +228,6 @@ public class OpenClustar {
 
 		rot.x-=speed*DX;
 		rot.y-=-speed*DY;
-		Quaternion q1=FromAxis(1.f,0.f,0.f,rot.x);
-		Quaternion q2=FromAxis(0.f,1.f,0.f,rot.y);
-		Quaternion q3=FromAxis(0.f,0.f,1.f,rot.z);
-		q1.normalise();
-		q2.normalise();
-		q3.normalise();
-		Quaternion qq=new Quaternion();
-		Quaternion.mul(q2, q3, qq);
-		Quaternion.mul(q1,qq,q);
-		q.normalise();
 		Mouse.setCursorPosition(Display.getDisplayMode().getWidth()/2, Display.getDisplayMode().getHeight()/2);
 	}
 }
